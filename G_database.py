@@ -4,11 +4,8 @@
 import sys
 import pickle
 
-games = {1: ['FPS', 'Halo3', 'Bungie', 'microsoft', 'xbox 360', '2007', '10', 'either', '$30.00', 'yes', '1/15/2008', 'the best halo!'],
-         2: ['FPS', 'Destiny 2', 'Bungie', ' ', 'Xbox One, Ps4, Stadia, PC', '2017', '10', 'either', 'Free', 'yes', 'xx/xx/2017', 'Campaign is done, but much more to do!' ]}
-
-datafile = open("gamelib.pickle", "wb")
-pickle.dump(games, datafile)
+datafile = open("gamelib.pickle", "rb")
+games = pickle.load(datafile)
 datafile.close
 
 def menu():
@@ -46,7 +43,7 @@ def direct(to, fro):
         if to == 'Q' or to == 'q':
             sys.exit()
     
-    if fro == 'search':
+    elif fro == 'search':
         if to == '1':
             Search('genre')
         if to == '2':
@@ -67,8 +64,9 @@ def direct(to, fro):
             Search('beaten')
         if to == '10':
             Search('purchase')
-        if to == 'B' or to == 'b':
-            pass
+            
+    if to == 'B' or to == 'b':
+        pass
             
        
 
@@ -93,7 +91,32 @@ def details(which):
         
         
 def AEGame():
-    print("running Add/Edit Game")
+    option = input("would you like to add or edit a game? ")
+    
+    if option[0] == 'A' or option[0] == 'a':
+        games[len(games.keys())+1] = [input("What is the Genre? "), input("What is the Title? "), input("Who was the Developer? "), input("Who was the Publisher? "),
+                                     input("On what system was it released? "), input("What year was it released? "), input("What is your rating on it? "),
+                                     input("is it single or multiplayer? "), input("What was The Price? "), input("Have you Beaten it? "),
+                                     input("When did you buy it? "), input("Any Notes? ")]
+    elif option[0] == 'e' or option[0] == 'E':
+        print('''
+              Edit Menu
+        ''')
+        available = []
+        for key in games.keys():
+            if games[key][1] not in available:
+                available.append(games[key][1])
+                
+        c = 0        
+        for i in available:
+            c+=1
+            print()
+            print("            "+ str(c) + ")   " + i)              
+        print('''+================================+''')
+        title = input("Please select a title from above to edit ")
+        
+        
+        
     
 def All():
     print("running Print All Games")
@@ -101,7 +124,7 @@ def All():
     for key in keys:
         details(key)
         
-def Search(filt):
+def Search(filt = 'menu'):
     if filt == 'menu':       
         print('''
                   Search Menu:
@@ -133,7 +156,7 @@ def Search(filt):
             
           +================================+
         ''')
-        destination = input("Please select a Search term from above")
+        destination = input("Please select a Search term from above ")
         direct(destination, 'search')
         
     elif filt == 'genre':
@@ -141,41 +164,211 @@ def Search(filt):
         print('''
                   Genre Selection Menu: ''')
         for key in games.keys():
-            if games(key)[0] not in available:
-                available.append(games(key)[0])
-                
+            term = games[key][0]
+            if term not in available:
+                available.append(games[key][0])
+        
+        c = 0        
         for i in available:
+            c+=1
             print()
-            print("       ", i + ")   " + available[i]) 
+            print("            "+ str(c) + ")   ", i) 
 
                
         print('''+================================+''')
-        destination = input("Please select a Search term from above")
-        
-           
-        
+        destination = input("Please select a Search term from above ")
+        if destination == "1":
+            keys = list(games.keys())
+            genre = games[keys[0]][0]
+            
+            for key in games.keys():
+                if games[key][0] == genre:
+                    details(key)
+               
     elif filt == 'title':
-        destination = input("Please enter desired title for search: ")
+        available = []
+        print('''
+                  Title Selection Menu: ''')
+        for key in games.keys():
+            if games[key][1] not in available:
+                available.append(games[key][1])
+                
+        c = 0        
+        for i in available:
+            c+=1
+            print()
+            print("            "+ str(c) + ")   " + i) 
+
+               
+        print('''+================================+''')
+        destination = input("Please select a title from above ")        
         
     elif filt == 'developer':
+        available = []
+        print('''
+                  Developer Selection Menu: ''')
+        for key in games.keys():
+            if games[key][2] not in available:
+                available.append(games[key][2])
+                
+        c = 0        
+        for i in available:
+            c+=1
+            print()
+            print("       "+ str(c) + ")   " + i) 
+
+               
+        print('''+================================+''')
+        destination = input("Please select a developer from above ")   
+    
+    elif filt == 'publisher':
+        available = []
+        print('''
+                  Publisher Selection Menu: ''')
+        for key in games.keys():
+            if games[key][3] not in available:
+                available.append(games[key][3])
+                
+        c = 0        
+        for i in available:
+            c+=1
+            print()
+            print("       "+ str(c) + ")   " + i) 
+
+               
+        print('''+================================+''')
+        destination = input("Please select a Publisher from above ")                
         
     elif filt == 'system':
+        available = []
+        print('''
+                  System Selection Menu: ''')
+        for key in games.keys():
+            for j in range(len(games[key][4])):
+                if games[key][4][j] not in available:
+                    available.append(games[key][4][j])
+                
+        c = 0
+        for i in available:
+            c+=1
+            print()
+            print("       "+ str(c) + ")   " + i) 
+        
+        print()
+        print("       B)    Back")
+
+               
+        print('''+================================+''')
+        destination = input("Please select a System from above ")       
         
     elif filt == 'release':
+        available = []
+        print('''
+                  Year Selection Menu: ''')
+        for key in games.keys():
+            if games[key][5] not in available:
+                available.append(games[key][5])
+                
+        c = 0        
+        for i in available:
+            c+=1
+            print()
+            print("       "+ str(c) + ")   " + i) 
+
+               
+        print('''+================================+''')
+        destination = input("Please select a Release Year from above ")            
         
     elif filt == 'rating':
+        available = []
+        print('''
+                  Rating Selection Menu: ''')
+        for key in games.keys():
+            if games[key][6] not in available:
+                available.append(games[key][6])
+                
+        c = 0        
+        for i in available:
+            c+=1
+            print()
+            print("       "+ str(c) + ")   " + i) 
+
+               
+        print('''+================================+''')
+        destination = input("Please select a rating from above ")                
         
     elif filt == 's or m':
+        available = []
+        print('''
+                  Multiplayer Selection Menu: ''')
+        for key in games.keys():
+            if games[key][7] not in available:
+                available.append(games[key][7])
+                
+        c = 0        
+        for i in available:
+            c+=1
+            print()
+            print("       "+ str(c) + ")   " + i) 
+
+               
+        print('''+================================+''')
+        destination = input("Please select an option from above ")               
         
     elif filt == 'price':
+        available = []
+        print('''
+                  Price Selection Menu: ''')
+        for key in games.keys():
+            if games[key][8] not in available:
+                available.append(games[key][8])
+                
+        c = 0        
+        for i in available:
+            c+=1
+            print()
+            print("       "+ str(c) + ")   " + i) 
+
+               
+        print('''+================================+''')
+        destination = input("Please select a price from above ")           
         
     elif filt == 'beaten':
+        available = []
+        print('''
+                  Beaten Selection Menu: ''')
+        for key in games.keys():
+            if games[key][9] not in available:
+                available.append(games[key][9])
+                
+        c = 0        
+        for i in available:
+            c+=1
+            print()
+            print("       "+ str(c) + ")   " + i) 
+
+               
+        print('''+================================+''')
+        destination = input("Please select an option from above ")          
         
     elif filt == 'purchase':
-        
-    
-        
-    
+        available = []
+        print('''
+                  Purchase amount Selection Menu: ''')
+        for key in games.keys():
+            if games[key][10] not in available:
+                available.append(games[key][10])
+                
+        c = 0        
+        for i in available:
+            c+=1
+            print()
+            print("       "+ str(c) + ")   " + i) 
+
+               
+        print('''+================================+''')
+        destination = input("Please select a Purchase amount from above ")          
+           
 def Remove():
     print(" running Remove a Game")
     
